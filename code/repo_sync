@@ -818,7 +818,8 @@ def main():
             reposadocommon.print_stderr('ERROR: curl tool not found at %s',
                                         reposadocommon.pref('CurlPath'))
             exit(-1)
-        if not reposadocommon.pref('LocalCatalogURLBase'):
+        if (not reposadocommon.pref('LocalCatalogURLBase') or
+                reposadocommon.pref('SkipPackages')):
             download_packages = False
         else:
             download_packages = True
