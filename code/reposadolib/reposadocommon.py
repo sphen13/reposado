@@ -339,7 +339,7 @@ def rewriteOneURL(full_url):
 
 def rewriteURLsForProduct(product):
     '''Rewrites the URLs for a product'''
-    only_distributions = pref('OnlyWriteDistributionURL')
+    only_distributions = pref('AlwaysRewriteDistributionURLs')
     if not only_distributions:
         if 'ServerMetadataURL' in product:
             product['ServerMetadataURL'] = rewriteOneURL(

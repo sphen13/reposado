@@ -105,6 +105,17 @@ The following keys are optional and may be defined in preferences.plist for spec
 
 	Defaults to displaying size in bytes.
 
+- AlwaysRewriteDistributionURLs
+
+	This boolean preference allows for rewriting of the DistributionURLs inside the catalogs so they point to the LocalCatalogURLBase. This preference is intended for the ability to modify config-data on products without replicating packages. More info for why you would want to do this [here.][1]
+
+	Note: Setting this preference to True will keep reposado from downloading packages.
+
+	Example:
+
+	    <key>AlwaysRewriteDistributionURLs</key>
+	    <true/>
+
 
 ## Example preferences.plist
 
@@ -120,3 +131,5 @@ The following keys are optional and may be defined in preferences.plist for spec
 	    <string>/Volumes/data/reposado/metadata</string>
 	</dict>
 	</plist>
+
+[1]: https://managingosx.wordpress.com/2015/01/30/gatekeeper-configuration-data-and-xprotectplistconfigdata-and-munki-and-reposado-oh-my/
