@@ -819,7 +819,9 @@ def main():
                                         reposadocommon.pref('CurlPath'))
             exit(-1)
         if (not reposadocommon.pref('LocalCatalogURLBase') or
-                reposadocommon.pref('AlwaysRewriteDistributionURLs')):
+                (reposadocommon.pref('AlwaysRewriteDistributionURLs') and
+                not reposadocommon.pref('OnlyRewriteDeprecatedURLs')
+            )):
             download_packages = False
         else:
             download_packages = True

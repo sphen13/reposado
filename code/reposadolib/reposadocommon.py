@@ -339,8 +339,8 @@ def rewriteOneURL(full_url):
 
 def rewriteURLsForProduct(product):
     '''Rewrites the URLs for a product'''
-    only_distributions = pref('AlwaysRewriteDistributionURLs')
-    if not only_distributions:
+    if (not pref('AlwaysRewriteDistributionURLs') and
+            not pref('OnlyRewriteDeprecatedURLs')):
         if 'ServerMetadataURL' in product:
             product['ServerMetadataURL'] = rewriteOneURL(
                 product['ServerMetadataURL'])
@@ -357,6 +357,33 @@ def rewriteURLsForProduct(product):
                 # removing the Digest causes 10.8.2 to use the replica's URL
                 # instead of Apple's
                 del package['Digest']
+    if (pref('AlwaysRewriteDistributionURLs') or
+            (not pref('AlwaysRewriteDistributionURLs') and
+                not pref('OnlyRewriteDeprecatedURLs'))):
+        distributions = product['Distributions']
+        for dist_lang in distributions.keys():
+            distributions[dist_lang] = rewriteOneURL(
+                distributions[dist_lang])
+
+
+def rewriteURLsForDeprecatedProduct(product):
+    '''Rewrites the URLs for a deprecated product'''
+    if 'ServerMetadataURL' in product:
+        product['ServerMetadataURL'] = rewriteOneURL(
+            product['ServerMetadataURL'])
+    for package in product.get('Packages', []):
+        if 'URL' in package:
+            package['URL'] = rewriteOneURL(package['URL'])
+        if 'MetadataURL' in package:
+            package['MetadataURL'] = rewriteOneURL(
+                package['MetadataURL'])
+        # workaround for 10.8.2 issue where client ignores local pkg
+        # and prefers Apple's URL. Need to revisit as we better understand
+        # this issue
+        if 'Digest' in package:
+            # removing the Digest causes 10.8.2 to use the replica's URL
+            # instead of Apple's
+            del package['Digest']
     distributions = product['Distributions']
     for dist_lang in distributions.keys():
         distributions[dist_lang] = rewriteOneURL(
@@ -435,7 +462,10 @@ def writeBranchCatalogs(localcatalogpath):
                                 'has been deprecated. Will use cached info '
                                 'and packages.',
                                  product_key, title, version, branch)
-                            rewriteURLsForProduct(catalog_entry)
+                            if pref('OnlyRewriteDeprecatedURLs'):
+                                rewriteURLsForDeprecatedProduct(catalog_entry)
+                            else:
+                                rewriteURLsForProduct(catalog_entry)
                             catalog['Products'][product_key] = catalog_entry
                             continue
             else:

@@ -105,11 +105,22 @@ The following keys are optional and may be defined in preferences.plist for spec
 
 	Defaults to displaying size in bytes.
 
+- OnlyRewriteDeprecatedURLs
+
+	This boolean preference allows for you to choose to only rewrite deprecated product URLs so they point to your LocalCatalogURLBase. Products currently available in Apple's catalogs will continue to point to Apple's CDN. This preference is intended to allow you to save bandwidth.
+
+  Note: Setting this preference requires LocalCatalogURLBase to be set and will locally cache all packages even if they will not be referenced in your catalogs.
+
+	Example:
+
+	    <key>OnlyRewriteDeprecatedURLs</key>
+	    <true/>
+
 - AlwaysRewriteDistributionURLs
 
 	This boolean preference allows for rewriting of the DistributionURLs inside the catalogs so they point to the LocalCatalogURLBase. This preference is intended for the ability to modify config-data on products without replicating packages. More info for why you would want to do this [here.][1]
 
-	Note: Setting this preference to True will keep reposado from downloading packages.
+	Note: Setting this preference to True will keep reposado from downloading packages unless you also specify OnlyRewriteDeprecatedURLs.
 
 	Example:
 
